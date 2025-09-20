@@ -40,8 +40,8 @@ export default function RegisterPage() {
       setIsSubmitting(true);
       await register(name, email, password);
       router.push("/login");
-    } catch (error) {
-      // Error handling is done in the context
+    } catch(error) {
+      console.error("Error occured in register submit handler: ", error);
     } finally {
       setIsSubmitting(false);
     }

@@ -37,7 +37,7 @@ function ResearchDetailContent() {
     };
 
     loadRequest();
-  }, []);
+  }, [fetchRequestDetail, params.id]);
 
   if (loading) {
     return (

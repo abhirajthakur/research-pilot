@@ -39,7 +39,7 @@ export default function LoginPage() {
       await login(email, password);
       router.push("/dashboard");
     } catch (error) {
-      // Error handling is done in the context
+      console.error("Error occured in login submit handler: ", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -103,7 +103,7 @@ export default function LoginPage() {
                 Sign In
               </Button>
               <p className="text-sm text-center text-slate-600">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
                   href="/register"
                   className="text-blue-600 hover:text-blue-500 font-medium"

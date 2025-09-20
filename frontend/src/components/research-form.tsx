@@ -26,7 +26,7 @@ export function ResearchForm() {
       await submitResearch(topic.trim());
       setTopic("");
     } catch (error) {
-      // Error handling is done in the context
+      console.error("Error occured in research form submit handler: ", error);
     }
   };
 

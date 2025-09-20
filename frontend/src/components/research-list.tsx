@@ -22,7 +22,7 @@ export function ResearchList() {
 
   useEffect(() => {
     fetchRequests();
-  }, []);
+  }, [fetchRequests]);
 
   const handleViewDetails = (id: string) => {
     router.push(`/research/${id}`);
