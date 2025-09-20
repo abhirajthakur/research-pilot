@@ -4,13 +4,11 @@ import authRouter from "./router/auth";
 import researchRouter from "./router/research";
 
 const PORT = process.env.PORT || 8000;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
 const app = express();
 
 app.use(express.json());
-// app.use(cors());
-app.use(cors({ origin: FRONTEND_URL }));
+app.use(cors());
 
 // Health check endpoint
 app.get("/health", (_req, res) => {
