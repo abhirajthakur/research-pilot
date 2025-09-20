@@ -1,0 +1,46 @@
+{
+  "name": "research-pilot-backend",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b",
+    "dev:api": "tsx src/index.ts",
+    "dev:worker": "tsx src/worker.ts",
+    "dev": "concurrently \"pnpm run dev:api\" \"pnpm run dev:worker\"",
+    "start:api": "node dist/index.js",
+    "start:worker": "node dist/worker.js",
+    "start": "concurrently \"pnpm run start:api\" \"pnpm run start:worker\"",
+    "docker:build": "docker build -t research-pilot-backend .",
+    "docker:run": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:migrate-prod": "NODE_ENV=production drizzle-kit migrate"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/bull": "^4.10.4",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/pg": "^8.15.5",
+    "concurrently": "^9.2.1",
+    "drizzle-kit": "^0.31.4",
+    "tsx": "^4.20.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@google/genai": "^1.20.0",
+    "bcrypt": "^6.0.0",
+    "bull": "^4.16.5",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "drizzle-orm": "^0.44.5",
+    "drizzle-zod": "^0.8.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
+  }
+}

@@ -1,0 +1,95 @@
+services:
+  api:
+    build: .
+    container_name: research-pilot-api
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+      PORT: 8000
+      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET}
+      NEWS_API_KEY: ${NEWS_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/app/migrations
+    command: ["pnpm", "run", "start:api"]
+    restart: unless-stopped
+    networks:
+      - research-pilot-network
+
+  worker:
+    build: .
+    container_name: research-pilot-worker
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET}
+      NEWS_API_KEY: ${NEWS_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_started
+    command: ["npm", "run", "start:worker"]
+    restart: unless-stopped
+    networks:
+      - research-pilot-network
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: research-pilot-postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - research-pilot-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: research-pilot-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - research-pilot-network
+
+networks:
+  research-pilot-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
