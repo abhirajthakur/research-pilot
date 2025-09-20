@@ -28,7 +28,11 @@ export function ResearchProvider({ children }: { children: React.ReactNode }) {
       const newRequest: ResearchRequest = {
         id: response.id,
         topic: response.topic,
-        status: response.status as any,
+        status: response.status as
+          | "pending"
+          | "processing"
+          | "completed"
+          | "failed",
         createdAt: new Date().toISOString(),
       };
 
@@ -54,7 +58,7 @@ export function ResearchProvider({ children }: { children: React.ReactNode }) {
       const formattedRequests: ResearchRequest[] = response.map((req) => ({
         id: req.id,
         topic: req.topic,
-        status: req.status as any,
+        status: req.status as "pending" | "processing" | "completed" | "failed",
         createdAt: req.createdAt,
       }));
 
@@ -77,7 +81,11 @@ export function ResearchProvider({ children }: { children: React.ReactNode }) {
       return {
         id: response.id,
         topic: response.topic,
-        status: response.status as any,
+        status: response.status as
+          | "pending"
+          | "processing"
+          | "completed"
+          | "failed",
         createdAt: new Date().toISOString(), // API doesn't return createdAt in detail
         logs: response.logs,
         results: response.results,
