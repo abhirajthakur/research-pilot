@@ -6,7 +6,7 @@ import {
   getResearchById,
 } from "@/lib/api";
 import { ResearchContextType, ResearchRequest } from "@/lib/types";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { toast } from "sonner";
 
 const ResearchContext = createContext<ResearchContextType | undefined>(
@@ -49,7 +49,7 @@ export function ResearchProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const fetchRequests = async () => {
+  const fetchRequests = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -71,34 +71,35 @@ export function ResearchProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchRequestDetail = async (
-    id: string,
-  ): Promise<ResearchRequest | null> => {
-    try {
-      const response = await getResearchById(id);
-      return {
-        id: response.id,
-        topic: response.topic,
-        status: response.status as
-          | "pending"
-          | "processing"
-          | "completed"
-          | "failed",
-        createdAt: new Date().toISOString(), // API doesn't return createdAt in detail
-        logs: response.logs,
-        results: response.results,
-      };
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to fetch request details";
-      toast.error(message);
-      return null;
-    }
-  };
+  const fetchRequestDetail = useCallback(
+    async (id: string): Promise<ResearchRequest | null> => {
+      try {
+        const response = await getResearchById(id);
+        return {
+          id: response.id,
+          topic: response.topic,
+          status: response.status as
+            | "pending"
+            | "processing"
+            | "completed"
+            | "failed",
+          createdAt: new Date().toISOString(), // API doesn't return createdAt in detail
+          logs: response.logs,
+          results: response.results,
+        };
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch request details";
+        toast.error(message);
+        return null;
+      }
+    },
+    [],
+  );
 
   return (
     <ResearchContext.Provider
