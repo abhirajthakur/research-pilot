@@ -2,7 +2,7 @@
   "name": "research-pilot-backend",
   "private": true,
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc",
     "dev:api": "tsx src/index.ts",
     "dev:worker": "tsx src/worker.ts",
     "dev": "concurrently \"pnpm run dev:api\" \"pnpm run dev:worker\"",
